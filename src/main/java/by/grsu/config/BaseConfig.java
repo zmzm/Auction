@@ -71,7 +71,8 @@ public class BaseConfig {
         return transactionManager;
     }
 
-    private Properties getHibernateProperties() {
+    @Bean
+    public Properties getHibernateProperties() {
         Properties properties = new Properties();
         properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
         properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));

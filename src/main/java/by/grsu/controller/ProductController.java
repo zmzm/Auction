@@ -27,17 +27,17 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Integer create(@RequestBody Product product) {
+    public @ResponseBody Integer create(@RequestBody Product product) {
         return productService.create(product);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Boolean delete(@PathVariable("id") Integer id) {
+    public @ResponseBody Boolean delete(@PathVariable("id") Integer id) {
         return productService.delete(id);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public Boolean update(@RequestBody Product product) {
+    public @ResponseBody Boolean update(@RequestBody Product product) {
         return productService.update(product);
     }
 }

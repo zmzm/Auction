@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
         if(u == null){
             return false;
         }
+        userRepository.delete(u);
         return true;
     }
 
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
         }
         u.setName(user.getName());
         u.setPassword(user.getPassword());
+        u.setRole(user.getRole());
         return true;
     }
 
