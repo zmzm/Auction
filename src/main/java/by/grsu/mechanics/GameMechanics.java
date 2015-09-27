@@ -1,4 +1,4 @@
-package by.grsu.manager;
+package by.grsu.mechanics;
 
 import by.grsu.model.Product;
 import by.grsu.random.Randomizer;
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameManager implements Runnable {
-    private boolean isStarted;
-    private boolean isFinished;
+public class GameMechanics implements Runnable {
+    public boolean isStarted = true;
+    public boolean isFinished = false;
     private int matchId;
     private int setId;
     private int gameId;
@@ -20,6 +20,10 @@ public class GameManager implements Runnable {
 
     @Autowired
     private UserService userService;
+
+    public static String[] getProductTypes() {
+        return new String[]{"product1", "product2"};
+    }
 
     public int calculateNewPrice(int currentPrice) {
         int k = Randomizer.randInt(1, 10);
@@ -32,7 +36,7 @@ public class GameManager implements Runnable {
     }
 
     public int getMaxSets() {
-        return 2 * getProductCount();
+        return 2 * 1;
     }
 
     public void nextSet() {
@@ -44,34 +48,33 @@ public class GameManager implements Runnable {
         }
     }
 
-    /*private List<Product> initializeProductList() {
-        int productCount = getProductCount();
+    private List<Product> initializeProductList() {
+        int productCount = 1;
         List<Product> products = new ArrayList<>();
         while (productCount > 0) {
-            for (String type : ConfigFacade.getProductTypes()) {
+            for (String type : getProductTypes()) {
                 products.add(new Product(type, 100));
             }
             productCount--;
         }
         return products;
-    }*/ //TODO products init
+    }
 
     @Override
     public void run() {
-        isStarted = true;
         matchId++;
         setId = 0;
         gameId = 0;
 
-        //products = initializeProductList();
+        products = initializeProductList();
 
-        while (!products.isEmpty()) {
+        while (!products.isEmpty() || isStarted) {
             int rnd = Randomizer.random.nextInt(products.size());
             prod = products.get(rnd);
 
             System.out.println("Current lot: " + prod.getTitle());
 
-            while (prod.getPrice() > 0 /*&& !prod.isBought()*/) {
+            while (prod.getPrice() > 0) {
                 int currentPrice = prod.getPrice();
                 purchaseCost = calculateNewPrice(currentPrice);
                 prod.setPrice(purchaseCost);
@@ -86,10 +89,15 @@ public class GameManager implements Runnable {
                 }
 
             }
-
             products.remove(rnd);
             nextSet();
         }
-        //stopMath();
+    }
+
+    public void stopMath() {
+        isStarted = false;
+        isFinished = true;
+
+        System.out.println("Game finished.");
     }
 }
