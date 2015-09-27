@@ -1,32 +1,44 @@
 package by.grsu.service.impl;
 
 import by.grsu.mechanics.GameMechanics;
+import by.grsu.model.Product;
 import by.grsu.service.GameService;
 import org.springframework.stereotype.Service;
 
 @Service("gameService")
 public class GameServiceImpl implements GameService {
 
-    private GameMechanics gameMechanics = new GameMechanics();
+    private GameMechanics gameMechanics = GameMechanics.getInstance();
 
     @Override
     public void startGame() {
-        Thread gameMechanicsThread = new Thread(gameMechanics);
-        gameMechanicsThread.start();
+        gameMechanics.startGame();
     }
 
     @Override
     public void stopGame() {
-        gameMechanics.stopMath();
+        gameMechanics.stopGame();
+    }
+
+    @Override
+    public String getProduct() {
+        Product product;
+        if (gameMechanics.isStarted()) {
+            product = gameMechanics.getProduct();
+            if (product != null) {
+                return product.getTitle() + " " + product.getPrice();
+            }
+        }
+        return "...";
     }
 
     @Override
     public boolean isStarted() {
-        return false;
+        return gameMechanics.isStarted();
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return gameMechanics.isFinished();
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameMechanics implements Runnable {
+public class GameMechanics {
     public boolean isStarted = true;
     public boolean isFinished = false;
     private int matchId;
@@ -20,6 +20,15 @@ public class GameMechanics implements Runnable {
 
     @Autowired
     private UserService userService;
+
+    private static GameMechanics instance;
+
+    public static GameMechanics getInstance() {
+        if (instance == null) {
+            instance = new GameMechanics();
+        }
+        return instance;
+    }
 
     public static String[] getProductTypes() {
         return new String[]{"product1", "product2"};
@@ -33,6 +42,10 @@ public class GameMechanics implements Runnable {
 
     public int getProductCount() {
         return Math.round((float) userService.findAll().size() / 2);
+    }
+
+    public Product getProduct() {
+        return prod;
     }
 
     public int getMaxSets() {
@@ -60,44 +73,60 @@ public class GameMechanics implements Runnable {
         return products;
     }
 
-    @Override
-    public void run() {
+    public void startGame() {
+        isStarted = true;
         matchId++;
         setId = 0;
         gameId = 0;
 
         products = initializeProductList();
 
-        while (!products.isEmpty() || isStarted) {
-            int rnd = Randomizer.random.nextInt(products.size());
-            prod = products.get(rnd);
+        final Thread gameTread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!products.isEmpty()) {
+                    int rnd = Randomizer.random.nextInt(products.size());
+                    prod = products.get(rnd);
 
-            System.out.println("Current lot: " + prod.getTitle());
+                    System.out.println("Current lot: " + prod.getTitle());
 
-            while (prod.getPrice() > 0) {
-                int currentPrice = prod.getPrice();
-                purchaseCost = calculateNewPrice(currentPrice);
-                prod.setPrice(purchaseCost);
+                    while (prod.getPrice() > 0 /*&& !prod.isBought()*/) {
+                        int currentPrice = prod.getPrice();
+                        purchaseCost = calculateNewPrice(currentPrice);
+                        prod.setPrice(purchaseCost);
 
-                System.out.println("Current price: " + prod.getPrice());
+                        System.out.println("Current price: " + prod.getPrice());
 
-                int m = Randomizer.randInt(5, 20);
-                try {
-                    Thread.sleep(m * 300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                        int m = Randomizer.randInt(5, 20);
+                        try {
+                            Thread.sleep(m * 300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    products.remove(rnd);
+                    nextSet();
                 }
-
+                stopGame();
             }
-            products.remove(rnd);
-            nextSet();
-        }
+        });
+        gameTread.start();
     }
 
-    public void stopMath() {
+    public void stopGame() {
         isStarted = false;
         isFinished = true;
 
         System.out.println("Game finished.");
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
     }
 }
