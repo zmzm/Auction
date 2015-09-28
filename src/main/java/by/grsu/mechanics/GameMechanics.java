@@ -1,9 +1,10 @@
 package by.grsu.mechanics;
 
+import by.grsu.config.AppInitializer;
 import by.grsu.model.Product;
 import by.grsu.random.Randomizer;
+import by.grsu.service.ProductService;
 import by.grsu.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +19,8 @@ public class GameMechanics {
     private Product prod;
     private int purchaseCost;
 
-    @Autowired
-    private UserService userService;
-
-    private static GameMechanics instance;
-
-    public static GameMechanics getInstance() {
-        if (instance == null) {
-            instance = new GameMechanics();
-        }
-        return instance;
-    }
-
-    public static String[] getProductTypes() {
-        return new String[]{"product1", "product2"};
-    }
+    UserService userService = (UserService) AppInitializer.ctx.getBean("userService");
+    ProductService productService = (ProductService) AppInitializer.ctx.getBean("productService");
 
     public int calculateNewPrice(int currentPrice) {
         int k = Randomizer.randInt(1, 10);
@@ -49,7 +37,7 @@ public class GameMechanics {
     }
 
     public int getMaxSets() {
-        return 2 * 1;
+        return 2 * getProductCount();
     }
 
     public void nextSet() {
@@ -62,10 +50,10 @@ public class GameMechanics {
     }
 
     private List<Product> initializeProductList() {
-        int productCount = 1;
+        int productCount = getProductCount();
         List<Product> products = new ArrayList<>();
         while (productCount > 0) {
-            for (String type : getProductTypes()) {
+            for (String type : productService.getProductTypes()) {
                 products.add(new Product(type, 100));
             }
             productCount--;
@@ -88,14 +76,14 @@ public class GameMechanics {
                     int rnd = Randomizer.random.nextInt(products.size());
                     prod = products.get(rnd);
 
-                    System.out.println("Current lot: " + prod.getTitle());
+                    System.out.println("Current lot: " + prod.title);
 
-                    while (prod.getPrice() > 0 /*&& !prod.isBought()*/) {
-                        int currentPrice = prod.getPrice();
+                    while (prod.price > 0 /*&& !prod.isBought()*/) {
+                        int currentPrice = prod.price;
                         purchaseCost = calculateNewPrice(currentPrice);
-                        prod.setPrice(purchaseCost);
+                        prod.price = (purchaseCost);
 
-                        System.out.println("Current price: " + prod.getPrice());
+                        System.out.println("Current price: " + prod.price);
 
                         int m = Randomizer.randInt(5, 20);
                         try {

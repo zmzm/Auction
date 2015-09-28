@@ -17,11 +17,13 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
+    @Transactional
     public Integer create(User user) {
-        return userRepository.save(user).getId();
+        return userRepository.save(user).id;
     }
 
     @Override
+    @Transactional
     public Boolean delete(int id) {
         User u = userRepository.findOne(id);
         if(u == null){
@@ -32,23 +34,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Boolean update(User user) {
-        User u = userRepository.findOne(user.getId());
+        User u = userRepository.findOne(user.id);
         if(u == null){
             return false;
         }
-        u.setName(user.getName());
-        u.setPassword(user.getPassword());
-        u.setRole(user.getRole());
+        u.name = user.name;
+        u.password = user.password;
+        u.role = user.role;
         return true;
     }
 
     @Override
+    @Transactional
     public User findById(int id) {
         User u = userRepository.findOne(id);
         if(u == null){

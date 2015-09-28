@@ -17,14 +17,16 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
 
     @Override
+    @Transactional
     public Integer create(Role role) {
-        return roleRepository.save(role).getId();
+        return roleRepository.save(role).id;
     }
 
     @Override
+    @Transactional
     public Boolean delete(int id) {
         Role r = roleRepository.findOne(id);
-        if(r == null){
+        if (r == null) {
             return false;
         }
         roleRepository.delete(r);
@@ -32,21 +34,24 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public List<Role> findAll() {
         return roleRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Boolean update(Role role) {
-        Role r = roleRepository.findOne(role.getId());
-        if(r == null){
+        Role r = roleRepository.findOne(role.id);
+        if (r == null) {
             return false;
         }
-        r.setName(role.getName());
+        r.name = role.name;
         return true;
     }
 
     @Override
+    @Transactional
     public Role findById(int id) {
         return roleRepository.findOne(id);
     }

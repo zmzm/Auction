@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service("gameService")
 public class GameServiceImpl implements GameService {
 
-    private GameMechanics gameMechanics = GameMechanics.getInstance();
+    private GameMechanics gameMechanics = new GameMechanics();
 
     @Override
     public void startGame() {
@@ -26,7 +26,7 @@ public class GameServiceImpl implements GameService {
         if (gameMechanics.isStarted()) {
             product = gameMechanics.getProduct();
             if (product != null) {
-                return product.getTitle() + " " + product.getPrice();
+                return product.title + " " + product.price;
             }
         }
         return "...";

@@ -14,9 +14,10 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class AppInitializer implements WebApplicationInitializer {
 
     private static final String DISPATCHER_SERVLET_NAME = "dispatcher";
+    public static AnnotationConfigWebApplicationContext ctx;
 
     public void onStartup(ServletContext servletContext) throws ServletException {
-        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx = new AnnotationConfigWebApplicationContext();
         ctx.register(BaseConfig.class);
         servletContext.addListener(new ContextLoaderListener(ctx));
         servletContext.addListener(new RequestContextListener());

@@ -10,4 +10,5 @@ public interface ProductService {
     public List<Product> findAll();
     public Boolean update(Product product);
     public Product findById(int id);
+    public List<String> getProductTypes();
 }

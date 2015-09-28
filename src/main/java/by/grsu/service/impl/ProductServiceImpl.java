@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("productService")
@@ -15,10 +16,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Resource
     ProductRepository productRepository;
+    private List<String> types = new ArrayList<>();
 
     @Override
     public Integer create(Product product) {
-        return productRepository.save(product).getId();
+        return productRepository.save(product).id;
     }
 
     @Override
@@ -38,13 +40,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Boolean update(Product product) {
-        Product p = productRepository.findOne(product.getId());
-        if(p == null){
+        Product p = productRepository.findOne(product.id);
+        if (p == null) {
             return false;
         }
         //Integer count = p.getAvailableCount() - (product.getInitialCount() - product.getAvailableCount());
         //p.setAvailableCount(count);
-        p.setPrice(product.getPrice());
+        p.title = product.title;
+        p.price = product.price;
         return true;
 
     }
@@ -52,9 +55,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(int id) {
         Product p = productRepository.findOne(id);
-        if(p == null){
+        if (p == null) {
             return p;
         }
         return p;
+    }
+
+    @Override
+    public List<String> getProductTypes() {
+        List<Product> products = productRepository.findAll();
+        for(int i = 0; i < products.size(); i ++){
+            types.add(products.get(i).title);
+        }
+        return types;
     }
 }
