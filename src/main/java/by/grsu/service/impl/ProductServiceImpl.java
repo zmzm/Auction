@@ -20,7 +20,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer create(Product product) {
-        return productRepository.save(product).id;
+        return productRepository.save(product).getId();
     }
 
     @Override
@@ -40,14 +40,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Boolean update(Product product) {
-        Product p = productRepository.findOne(product.id);
+        Product p = productRepository.findOne(product.getId());
         if (p == null) {
             return false;
         }
         //Integer count = p.getAvailableCount() - (product.getInitialCount() - product.getAvailableCount());
         //p.setAvailableCount(count);
-        p.title = product.title;
-        p.price = product.price;
+        p.setTitle(product.getTitle());
+        p.setPrice(product.getPrice());
         return true;
 
     }
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
     public List<String> getProductTypes() {
         List<Product> products = productRepository.findAll();
         for(int i = 0; i < products.size(); i ++){
-            types.add(products.get(i).title);
+            types.add(products.get(i).getTitle());
         }
         return types;
     }

@@ -76,14 +76,14 @@ public class GameMechanics {
                     int rnd = Randomizer.random.nextInt(products.size());
                     prod = products.get(rnd);
 
-                    System.out.println("Current lot: " + prod.title);
+                    System.out.println("Current lot: " + prod.getTitle());
 
-                    while (prod.price > 0 /*&& !prod.isBought()*/) {
-                        int currentPrice = prod.price;
+                    while (prod.getPrice() > 0 /*&& !prod.isBought()*/) {
+                        int currentPrice = prod.getPrice();
                         purchaseCost = calculateNewPrice(currentPrice);
-                        prod.price = (purchaseCost);
+                        prod.setPrice(purchaseCost);
 
-                        System.out.println("Current price: " + prod.price);
+                        System.out.println("Current price: " + prod.getPrice());
 
                         int m = Randomizer.randInt(5, 20);
                         try {

@@ -1,9 +1,11 @@
 package by.grsu.service;
 
+import by.grsu.model.Product;
+
 public interface GameService {
     public void startGame();
     public void stopGame();
-    public String getProduct();
+    public Product getProduct();
     public boolean isStarted();
     public boolean isFinished();
 }

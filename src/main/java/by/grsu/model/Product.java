@@ -9,18 +9,42 @@ public class Product {
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    private Integer id;
     @Column(name = "product_title")
-    public String title;
+    private String title;
     @Column(name = "product_price")
-    public int price;
+    private int price;
     @Column(name = "product_available")
-    public int availableCount;
+    private int availableCount;
 
     public Product(){};
 
     public Product(String title, int price) {
         this.title = title;
         this.price = price;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

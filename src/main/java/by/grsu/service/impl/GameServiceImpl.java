@@ -21,15 +21,15 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public String getProduct() {
-        Product product;
+    public Product getProduct() {
+        Product product = null;
         if (gameMechanics.isStarted()) {
             product = gameMechanics.getProduct();
             if (product != null) {
-                return product.title + " " + product.price;
+                return product;
             }
         }
-        return "...";
+        return product;
     }
 
     @Override
